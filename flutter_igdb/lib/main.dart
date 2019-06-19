@@ -60,15 +60,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildGamesList() {
     return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
+      itemCount: gamesList.length,
+        //padding: const EdgeInsets.all(16.0),
         itemBuilder: (context, i) {
-          if (i.isOdd) return Divider();
-
-          final index = i ~/ 2;
-          if (index >= gamesList.length) {
-
-          }
-          return _buildRow(gamesList[index]);
+        
+          return _buildRow(gamesList[i]);
         });
   }
 
