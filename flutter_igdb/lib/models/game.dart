@@ -130,24 +130,24 @@ class PlatformLogo {
 class Version {
   int id;
   String name;
-  PlatformLogo platformLogo;
+  //PlatformLogo platformLogo;
 
   Version({
     this.id,
     this.name,
-    this.platformLogo,
+    //this.platformLogo,
   });
 
   factory Version.fromJson(Map<String, dynamic> json) => new Version(
     id: json["id"],
     name: json["name"],
-    platformLogo: json["platform_logo"] == null ? null : json["platform_logo"],
+    //platformLogo: json["platform_logo"] == null ? null : json["platform_logo"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
-    "platform_logo": platformLogo == null ? null : platformLogo,
+    //"platform_logo": platformLogo == null ? null : platformLogo,
   };
 }
 

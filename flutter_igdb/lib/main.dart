@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_igdb/models/game.dart';
 import 'package:flutter_igdb/services/services.dart';
+import 'package:flutter_igdb/models/game.dart';
+import 'package:date_format/date_format.dart';
 
 void main() => runApp(MyApp());
 
@@ -28,6 +29,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<Game>gamesList;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,10 @@ class _MyHomePageState extends State<MyHomePage> {
         future: getGames("divinity"),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Text('success');
+            if (snapshot.data != null) {
+              gamesList = snapshot.data;
+              return _buildGamesList();
+            }
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
@@ -50,6 +55,32 @@ class _MyHomePageState extends State<MyHomePage> {
           return CircularProgressIndicator();
         },
       ),
+    );
+  }
+
+  Widget _buildGamesList() {
+    return ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemBuilder: (context, i) {
+          if (i.isOdd) return Divider();
+
+          final index = i ~/ 2;
+          if (index >= gamesList.length) {
+
+          }
+          return _buildRow(gamesList[index]);
+        });
+  }
+
+  Widget _buildRow(Game game) {
+    return ListTile(
+      title: Text(
+        game.name,
+      ),
+      subtitle: Text(
+          game.firstReleaseDate == null ? 'unknown' : formatDate(new DateTime.fromMillisecondsSinceEpoch(game.firstReleaseDate * 1000), [dd, '/', mm, '/', yyyy])
+      ),
+      leading: Image.network('https:' + game.cover.url),
     );
   }
 }

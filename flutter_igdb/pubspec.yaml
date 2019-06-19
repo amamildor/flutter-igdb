@@ -24,7 +24,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   json_annotation: ^1.0.0
-  igdb_wrapper: any
+  igdb_client: any
+  date_format: any
 
 dev_dependencies:
   flutter_test:
