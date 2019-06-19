@@ -39,7 +39,43 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: FutureBuilder<List<Game>>(
+      body: Column(children: <Widget>[
+        TextField(
+          autofocus: true,
+          //controller: _searchQuery,
+          style: TextStyle(color: Colors.blue),
+          decoration: InputDecoration(
+              border: InputBorder.none,
+              prefixIcon: Padding(
+                  padding: EdgeInsetsDirectional.only(end: 16.0),
+                  child: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  )),
+              hintText: "Search repositories...",
+              hintStyle: TextStyle(color: Colors.lightBlueAccent)),
+        ),
+        Expanded(
+          child: FutureBuilder<List<Game>>(
+            future: getGames("divinity"),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data != null) {
+                  gamesList = snapshot.data;
+                  return _buildGamesList();
+                }
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+
+              // By default, show a loading spinner.
+              return CircularProgressIndicator();
+            },
+          ),
+        )
+      ],
+      ),
+      /*FutureBuilder<List<Game>>(
         future: getGames("divinity"),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -54,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // By default, show a loading spinner.
           return CircularProgressIndicator();
         },
-      ),
+      ),*/
     );
   }
 
