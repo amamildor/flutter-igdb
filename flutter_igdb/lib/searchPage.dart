@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_igdb/services/services.dart';
-import 'package:flutter_igdb/models/game.dart';
+import 'package:flutter_igdb/models/gameSearch.dart';
 import 'package:date_format/date_format.dart';
+import 'package:flutter_igdb/gameDetailsPage.dart';
 import 'dart:async';
 
 class SearchList extends StatefulWidget {
@@ -16,7 +17,7 @@ class _SearchState extends State<SearchList> {
   final TextEditingController _searchQuery = TextEditingController();
   bool _isSearching = false;
   String _error;
-  List<Game> _results = List();
+  List<GameSearch> _results = List();
 
   Timer debounceTimer;
 
@@ -109,7 +110,7 @@ class _SearchState extends State<SearchList> {
     }
   }
 
-  Widget _buildRow(Game game) {
+  Widget _buildRow(GameSearch game) {
     return ListTile(
       title: Text(
         game.name,
@@ -123,6 +124,14 @@ class _SearchState extends State<SearchList> {
         height: 55,
         fit: BoxFit.cover,
       ) : Image.network('https:' + game.cover.url),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GameDetailsPage(),
+          ),
+        );
+      },
     );
   }
 }
