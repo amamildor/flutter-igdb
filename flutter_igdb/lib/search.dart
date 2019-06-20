@@ -69,6 +69,8 @@ class _SearchState extends State<SearchList> {
       appBar: AppBar(
         centerTitle: true,
         title: TextField(
+          cursorColor: Colors.blueAccent,
+          cursorWidth: 1.5,
           autofocus: true,
           controller: _searchQuery,
           style: TextStyle(color: Colors.white),
@@ -81,7 +83,7 @@ class _SearchState extends State<SearchList> {
               color: Colors.white,
             )),
             hintText: "Search games ...",
-            hintStyle: TextStyle(color: Colors.white)
+            hintStyle: TextStyle(color: Colors.grey)
           ),
         ),
       ),
@@ -115,7 +117,12 @@ class _SearchState extends State<SearchList> {
       subtitle: Text(
           game.firstReleaseDate == null ? 'unknown' : formatDate(new DateTime.fromMillisecondsSinceEpoch(game.firstReleaseDate * 1000), [dd, '/', mm, '/', yyyy])
       ),
-      leading: Image.network('https:' + game.cover.url),
+      leading: game.cover == null ? Image.asset(
+        'assets/place_holder.png',
+        width: 55,
+        height: 55,
+        fit: BoxFit.cover,
+      ) : Image.network('https:' + game.cover.url),
     );
   }
 }
