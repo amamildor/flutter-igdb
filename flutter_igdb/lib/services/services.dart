@@ -16,15 +16,6 @@ Future<List<Game>> getGames(String search) async {
   );
 
   final response = await makeRequest('$url/games', params.toBody());
-  /*final response = await http.post('$url/games',
-  headers: {
-    "Accept": "application/json",
-    "user-key": "66f9368c53abc2ef45b87aa438fa4076"
-      },
-  body: {"fields": "name, first_release_date, release_dates, cover.*,platforms.*, platforms.platform_logo.*, platforms.versions.*",
-      "search": search});
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');*/
   return response;
 }
 
