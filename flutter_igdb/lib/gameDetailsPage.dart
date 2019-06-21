@@ -15,14 +15,16 @@ class GameDetailsPage extends StatelessWidget {
       ),
       body: ListView(
         children: <Widget>[
-          _buildHeader(),
+          _buildHeader(context),
+          _buildHeaderTextRow('Summary', gameDetails.summary),
+          _buildHeaderTextRow('Storyline', gameDetails.storyline),
           _buildScreenShots(),
         ],
       )
     );
   }
 
-  Container _buildHeader() {
+  Container _buildHeader(BuildContext context) {
     var release = new DateTime.fromMillisecondsSinceEpoch(gameDetails.firstReleaseDate * 1000);
     var formattedRelease = formatDate(release, [yyyy, ' ', MM, ' ', dd]);
     if (formattedRelease.endsWith('1')) {
@@ -67,17 +69,55 @@ class GameDetailsPage extends StatelessWidget {
                 ),
                 Container(
                   padding: const EdgeInsets.only(bottom: 8, left: 5),
-                  child: Text(
-                      gameDetails.firstReleaseDate == null ? 'unknown' : formattedRelease,
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
+                  child: RichText(
+                      text: TextSpan(
+                        // set the default style for the children TextSpans
+                          style: Theme.of(context).textTheme.body1.copyWith(color: Colors.grey),
+                          children: [
+                            TextSpan(
+                                text: 'Genres : ',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  color: Colors.grey[600]
+                                )
+                            ),
+                            TextSpan(
+                              text: gameDetails.genres.map((genre) => genre.name).join(', '),
+
+                            ),
+                          ]
+                      )
                   ),
                 ),
               ],
             ),
           ),
           //FavoriteWidget(),
+        ],
+      ),
+    );
+  }
+
+  Container _buildHeaderTextRow(String title, String content) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(content),
+              ],
+            ),
+          ),
         ],
       ),
     );
