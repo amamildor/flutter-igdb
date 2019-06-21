@@ -22,7 +22,7 @@ class GameDetails {
   String storyline;
   String summary;
   List<Video> videos;
-  List<Screenshot> websites;
+  List<Websites> websites;
 
   GameDetails({
     this.id,
@@ -55,7 +55,7 @@ class GameDetails {
     storyline: json["storyline"],
     summary: json["summary"],
     videos: new List<Video>.from(json["videos"].map((x) => Video.fromJson(x))),
-    websites: new List<Screenshot>.from(json["websites"].map((x) => Screenshot.fromJson(x))),
+    websites: new List<Websites>.from(json["websites"].map((x) => Websites.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -212,6 +212,30 @@ class Screenshot {
 
   Map<String, dynamic> toJson() => {
     "id": id,
+    "url": url,
+  };
+}
+
+class Websites {
+  int id;
+  int category;
+  String url;
+
+  Websites({
+    this.id,
+    this.category,
+    this.url,
+  });
+
+  factory Websites.fromJson(Map<String, dynamic> json) => new Websites(
+    id: json["id"],
+    category: json["category"],
+    url: json["url"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "category": category,
     "url": url,
   };
 }
