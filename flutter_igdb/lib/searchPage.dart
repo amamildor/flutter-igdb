@@ -125,12 +125,14 @@ class _SearchState extends State<SearchList> {
         fit: BoxFit.cover,
       ) : Image.network('https:' + game.cover.url),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => GameDetailsPage(),
-          ),
-        );
+        getGameDetails(game.id).then((response) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GameDetailsPage(gameDetails: response),
+            ),
+          );
+        });
       },
     );
   }

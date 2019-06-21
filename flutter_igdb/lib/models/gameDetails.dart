@@ -151,20 +151,24 @@ class Genre {
 class InvolvedCompany {
   int id;
   Company company;
+  bool developer;
 
   InvolvedCompany({
     this.id,
     this.company,
+    this.developer,
   });
 
   factory InvolvedCompany.fromJson(Map<String, dynamic> json) => new InvolvedCompany(
     id: json["id"],
     company: Company.fromJson(json["company"]),
+    developer: json["developer"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "company": company.toJson(),
+    "developer": developer,
   };
 }
 

@@ -21,15 +21,15 @@ Future<List<GameSearch>> getGames(String search) async {
   return gameSearchFromJson(response); //cast json to list of gameSearch
 }
 
-Future<List<GameDetails>> getGameDetails(int gameId) async {
+Future<GameDetails> getGameDetails(int gameId) async {
 
   var params = new IGDBRequestParameters(
       ids: [gameId], //term to search
-      fields: ['id', 'name', 'storyline', 'summary', 'aggregated_rating', 'aggregated_rating_count', 'screenshots.url', 'videos.*', 'websites.url', 'category', 'cover.*', 'first_release_date', 'genres.*', 'involved_companies.company.name', 'involved_companies.company.logo.url'], //fields to return from api call
+      fields: ['id', 'name', 'storyline', 'summary', 'aggregated_rating', 'aggregated_rating_count', 'screenshots.url', 'videos.*', 'websites.url', 'category', 'cover.*', 'first_release_date', 'genres.*', 'involved_companies.company.name', 'involved_companies.company.logo.url', 'involved_companies.developer'], //fields to return from api call
   );
 
   final response = await makeRequest('$url/games', params.toBody()); //json return from api
-  return gameDetailsFromJson(response); //cast json to list of gameSearch
+  return gameDetailsFromJson(response).first; //cast json to list of gameSearch
 }
 
 
