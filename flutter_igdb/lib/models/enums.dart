@@ -27,3 +27,7 @@ enum WebsiteCategory {
   pinterest,
   soundcloud
 }
+
+const Map<WebsiteCategory, String> WebsiteCategoryImage = {
+  WebsiteCategory.official: "official",
+};
