@@ -1,26 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_igdb/models/gameDetails.dart';
 import 'package:date_format/date_format.dart';
+import 'package:flutter_igdb/models/enums.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class GameDetailsPage extends StatelessWidget {
+class GameDetailsPage extends StatefulWidget {
   final GameDetails gameDetails;
 
   GameDetailsPage({Key key, @required this.gameDetails}) : super(key: key);
 
   @override
+  _GameDetailsPageState createState() => new _GameDetailsPageState(gameDetails);
+}
+
+class _GameDetailsPageState extends State<GameDetailsPage> {
+  ScrollController _scrollCtrlr;
+  GameDetails gameDetails;
+  _GameDetailsPageState(this.gameDetails);
+
+  final itemSize = 40.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollCtrlr = new ScrollController();
+  }
   Widget build(BuildContext context) {
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Second Page'),
-      ),
-      body: ListView(
-        children: <Widget>[
-          _buildHeader(context),
-          _buildHeaderTextRow('Summary', gameDetails.summary),
-          _buildHeaderTextRow('Storyline', gameDetails.storyline),
-          _buildScreenShots(),
-        ],
-      )
+        appBar: AppBar(
+          title: Text('Second Page'),
+        ),
+        body: ListView(
+          children: <Widget>[
+            _buildHeader(context),
+            _buildWebsites(),
+            _buildHeaderTextRow('Summary', gameDetails.summary),
+            _buildHeaderTextRow('Storyline', gameDetails.storyline),
+            _buildScreenShots(),
+          ],
+        )
     );
   }
 
@@ -32,9 +51,9 @@ class GameDetailsPage extends StatelessWidget {
     } else if (formattedRelease.endsWith('2')) {
       formattedRelease = formatDate(release, [d, 'nd ', M, ', ', yyyy]);
     } else if (formattedRelease.endsWith('3')) {
-    formattedRelease = formatDate(release, [d, 'rd ', M, ', ', yyyy]);
+      formattedRelease = formatDate(release, [d, 'rd ', M, ', ', yyyy]);
     } else {
-    formattedRelease = formatDate(release, [d, 'th ', M, ', ', yyyy]);
+      formattedRelease = formatDate(release, [d, 'th ', M, ', ', yyyy]);
     }
     return Container(
       padding: const EdgeInsets.all(8),
@@ -78,7 +97,7 @@ class GameDetailsPage extends StatelessWidget {
                                 text: 'Genres : ',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                  color: Colors.grey[600]
+                                    color: Colors.grey[600]
                                 )
                             ),
                             TextSpan(
@@ -137,5 +156,76 @@ class GameDetailsPage extends StatelessWidget {
         pageSnapping: true,
       ),
     );
+  }
+
+  Container _buildWebsites() {
+    List<Widget> sites = gameDetails.websites.map((site) =>  Container(
+        child: new IconButton(
+          icon: Image.asset(intToWebsiteCategory(site.category)),
+          onPressed: () => _launchURL(site.url),
+        )
+    )
+    ).toList();
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          SizedBox(
+            height: itemSize,
+            width: 30,
+            child: IconButton(
+              icon: Image.asset('assets/left.png'),
+              onPressed: _moveLeft,
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Websites',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Container(
+                  height: itemSize,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _scrollCtrlr,
+                    itemExtent: itemSize,
+                    children: sites,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: itemSize,
+            width: 30,
+            child: IconButton(
+              icon: Image.asset('assets/right.png'),
+              onPressed: _moveRight,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not open $url';
+    }
+  }
+
+  _moveLeft() {
+    _scrollCtrlr.animateTo(_scrollCtrlr.offset - itemSize, duration: Duration(milliseconds: 200), curve: Curves.linear);
+  }
+
+  _moveRight() {
+    _scrollCtrlr.animateTo(_scrollCtrlr.offset + itemSize, duration: Duration(milliseconds: 200), curve: Curves.linear);
   }
 }

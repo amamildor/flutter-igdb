@@ -25,7 +25,7 @@ Future<GameDetails> getGameDetails(int gameId) async {
 
   var params = new IGDBRequestParameters(
       ids: [gameId], //term to search
-      fields: ['id', 'name', 'storyline', 'summary', 'aggregated_rating', 'aggregated_rating_count', 'screenshots.url', 'videos.*', 'websites.url', 'category', 'cover.*', 'first_release_date', 'genres.*', 'involved_companies.company.name', 'involved_companies.company.logo.url', 'involved_companies.developer'], //fields to return from api call
+      fields: ['id', 'name', 'storyline', 'summary', 'aggregated_rating', 'aggregated_rating_count', 'screenshots.url', 'videos.*', 'websites.url', 'websites.category', 'category', 'cover.*', 'first_release_date', 'genres.*', 'involved_companies.company.name', 'involved_companies.company.logo.url', 'involved_companies.developer'], //fields to return from api call
   );
 
   final response = await makeRequest('$url/games', params.toBody()); //json return from api
