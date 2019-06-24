@@ -3,6 +3,8 @@ import 'package:flutter_igdb/models/gameDetails.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter_igdb/models/enums.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class GameDetailsPage extends StatefulWidget {
   final GameDetails gameDetails;
@@ -144,16 +146,38 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
 
   Container _buildScreenShots() {
     List<Widget> screens = gameDetails.screenshots.map((screen) =>  Container(
-      child: Image.network('https:' + screen.url.replaceAll('thumb', 'screenshot_big')),
+      margin: EdgeInsets.all(5.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+        child: Image.network('https:' + screen.url.replaceAll('thumb', 'screenshot_big'), fit: BoxFit.cover),
+      )
     )
     ).toList();
     return Container(
+      margin: EdgeInsets.only(bottom: 10.0, top: 10.0),
       color: Colors.black87,
       height: 230,
-      child: PageView(
-        scrollDirection: Axis.horizontal,
-        children: screens,
-        pageSnapping: true,
+      child: Swiper(
+        itemBuilder: (BuildContext context, int index) {
+          return new Image.network(
+            'https:' + gameDetails.screenshots[index].url.replaceAll('thumb', 'screenshot_big'),
+            fit: BoxFit.fitWidth,
+          );
+        },
+        autoplay: false,
+        itemCount: gameDetails.screenshots.length,
+        pagination: new SwiperPagination(),
+        control: new SwiperControl(
+          color: Colors.purple[100],
+          size: 40.0,
+          padding: EdgeInsets.symmetric(horizontal: 5.0),
+          iconNext: Icon(FontAwesomeIcons.chevronCircleRight).icon,
+          iconPrevious: Icon(FontAwesomeIcons.chevronCircleLeft).icon,
+        ),
+        viewportFraction: 0.8,
+        scale: 0.9,
+        itemWidth: MediaQuery.of(context).size.width * 0.9,
+        layout: SwiperLayout.DEFAULT,
       ),
     );
   }
