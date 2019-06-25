@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_igdb/models/gameSearch.dart';
 import 'package:flutter_igdb/models/gameDetails.dart';
+import 'package:flutter_igdb/models/pulses.dart';
 import 'package:igdb_client/igdb_client.dart';
 
 var client = new IGDBClient('amamildor', '66f9368c53abc2ef45b87aa438fa4076');
@@ -32,6 +33,17 @@ Future<GameDetails> getGameDetails(int gameId) async {
   return gameDetailsFromJson(response).first; //cast json to list of gameSearch
 }
 
+Future<Pulses> getPulses() async {
+
+  var params = new IGDBRequestParameters(
+    limit: 20,
+    order: 'published_at desc',
+    fields: ['author', 'created_at', 'image', 'published_at', 'pulse_source.name,summary', 'title', 'updated_at', 'website.url'], //fields to return from api call
+  );
+
+  final response = await makeRequest('$url/pulses', params.toBody()); //json return from api
+  return pulsesFromJson(response).first; //cast json to list of gameSearch
+}
 
 Future<String> makeRequest(String url, String body) async {
   var uri = Uri.parse(url);
