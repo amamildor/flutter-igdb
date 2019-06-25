@@ -43,7 +43,7 @@ class GameDetails {
 
   factory GameDetails.fromJson(Map<String, dynamic> json) => new GameDetails(
     id: json["id"],
-    aggregatedRating: json["aggregated_rating"].toDouble(),
+    aggregatedRating: json["aggregated_rating"] == null ? null : json["aggregated_rating"].toDouble(),
     aggregatedRatingCount: json["aggregated_rating_count"],
     category: json["category"],
     cover: Cover.fromJson(json["cover"]),
@@ -185,7 +185,7 @@ class Company {
 
   factory Company.fromJson(Map<String, dynamic> json) => new Company(
     id: json["id"],
-    logo: Screenshot.fromJson(json["logo"]),
+    logo: json["logo"] == null ? null : Screenshot.fromJson(json["logo"]),
     name: json["name"],
   );
 
