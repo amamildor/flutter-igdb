@@ -4,7 +4,7 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter_igdb/models/enums.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:io' show Platform;
 
 class GameDetailsPage extends StatefulWidget {
   final GameDetails gameDetails;
@@ -39,6 +39,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
             _buildWebsites(),
             _buildHeaderTextRow('About', gameDetails.summary),
             _buildHeaderTextRow('Storyline', gameDetails.storyline),
+            _buildVideos(),
             _buildScreenShots(),
           ],
         )
@@ -149,14 +150,6 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   }
 
   Container _buildScreenShots() {
-    List<Widget> screens = gameDetails.screenshots.map((screen) =>  Container(
-      margin: EdgeInsets.all(5.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-        child: Image.network('https:' + screen.url.replaceAll('thumb', 'screenshot_big'), fit: BoxFit.cover),
-      )
-    )
-    ).toList();
     return Container(
       margin: EdgeInsets.only(bottom: 10.0, top: 10.0),
       color: Colors.black87,
@@ -180,11 +173,29 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     );
   }
 
+  Container _buildVideos() {
+    List<Widget> videos = gameDetails.videos.map((video) =>  Container(
+        child: new IconButton(
+          icon: Image.network('https://img.youtube.com/vi/' + video.videoId + '/0.jpg'),
+          onPressed: () => _launchURL('http://www.youtube.com/watch?v=' + video.videoId, false),
+        )
+    )
+    ).toList();
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _mediaList(videos, 200, "Videos"),
+        ],
+      ),
+    );
+  }
+
   Container _buildWebsites() {
     List<Widget> sites = gameDetails.websites.map((site) =>  Container(
         child: new IconButton(
           icon: Image.asset(intToWebsiteCategory(site.category)),
-          onPressed: () => _launchURL(site.url),
+          onPressed: () => _launchURL(site.url, true),
         )
     )
     ).toList();
@@ -198,18 +209,17 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             _scrollButton(Image.asset('assets/left.png'), _moveLeft),
-            _websitesList(sites),
+            _mediaList(sites, itemSize, "Websites"),
             _scrollButton(Image.asset('assets/right.png'), _moveRight),
           ],
         ),
       );
     } else {
       return Container(
-        //padding: EdgeInsets.symmetric(horizontal: 5.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            _websitesList(sites),
+            _mediaList(sites, itemSize, "Websites"),
           ],
         ),
       );
@@ -227,7 +237,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     );
   }
 
-  Expanded _websitesList(List<Widget> sites) {
+  Expanded _mediaList(List<Widget> sites, double size, String title) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,18 +245,18 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
           Container(
             padding: EdgeInsets.only(left: 8.0),
             child: Text(
-              'Websites',
+              title,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
           Container(
-            height: itemSize,
+            height: size,
             child: ListView(
               scrollDirection: Axis.horizontal,
               controller: _scrollCtrlr,
-              itemExtent: itemSize,
+              itemExtent: size,
               children: sites,
             ),
           ),
@@ -255,9 +265,13 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     );
   }
 
-  _launchURL(String url) async {
+  _launchURL(String url, bool forceSafari) async {
     if (await canLaunch(url)) {
-      await launch(url);
+      if (Platform.isIOS) {
+        await launch(url, forceSafariVC: forceSafari);
+      } else {
+        await launch(url);
+      }
     } else {
       throw 'Could not open $url';
     }
