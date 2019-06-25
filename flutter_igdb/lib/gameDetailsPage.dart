@@ -37,7 +37,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
           children: <Widget>[
             _buildHeader(context),
             _buildWebsites(),
-            _buildHeaderTextRow('Summary', gameDetails.summary),
+            _buildHeaderTextRow('About', gameDetails.summary),
             _buildHeaderTextRow('Storyline', gameDetails.storyline),
             _buildScreenShots(),
           ],
@@ -167,13 +167,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
         autoplay: false,
         itemCount: gameDetails.screenshots.length,
         pagination: new SwiperPagination(),
-        control: new SwiperControl(
-          color: Colors.purple[100],
-          size: 40.0,
-          padding: EdgeInsets.symmetric(horizontal: 5.0),
-          iconNext: Icon(FontAwesomeIcons.chevronCircleRight).icon,
-          iconPrevious: Icon(FontAwesomeIcons.chevronCircleLeft).icon,
-        ),
+        control: null,
         viewportFraction: 0.8,
         scale: 0.9,
         itemWidth: MediaQuery.of(context).size.width * 0.9,
@@ -190,46 +184,66 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
         )
     )
     ).toList();
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+
+    var listWidth = (sites.length * itemSize);
+    var screenWidth = MediaQuery.of(context).size.width;
+
+    if (screenWidth < listWidth) {
+      return Container(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            _scrollButton(Image.asset('assets/left.png'), _moveLeft),
+            _websitesList(sites),
+            _scrollButton(Image.asset('assets/right.png'), _moveRight),
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        //padding: EdgeInsets.symmetric(horizontal: 5.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            _websitesList(sites),
+          ],
+        ),
+      );
+    }
+  }
+
+  SizedBox _scrollButton(Image icon, VoidCallback action) {
+    return SizedBox(
+      height: itemSize,
+      width: 30,
+      child: IconButton(
+        icon: icon,
+        onPressed: action,
+      ),
+    );
+  }
+
+  Expanded _websitesList(List<Widget> sites) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(
-            height: itemSize,
-            width: 30,
-            child: IconButton(
-              icon: Image.asset('assets/left.png'),
-              onPressed: _moveLeft,
+          Container(
+            padding: EdgeInsets.only(left: 8.0),
+            child: Text(
+              'Websites',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Websites',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Container(
-                  height: itemSize,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    controller: _scrollCtrlr,
-                    itemExtent: itemSize,
-                    children: sites,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
+          Container(
             height: itemSize,
-            width: 30,
-            child: IconButton(
-              icon: Image.asset('assets/right.png'),
-              onPressed: _moveRight,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              controller: _scrollCtrlr,
+              itemExtent: itemSize,
+              children: sites,
             ),
           ),
         ],
