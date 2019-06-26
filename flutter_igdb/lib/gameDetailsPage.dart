@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_igdb/models/gameDetails.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter_igdb/models/enums.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'dart:io' show Platform;
+import 'package:flutter_igdb/utils.dart';
 
 class GameDetailsPage extends StatefulWidget {
   final GameDetails gameDetails;
@@ -177,7 +176,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     List<Widget> videos = gameDetails.videos.map((video) =>  Container(
         child: new IconButton(
           icon: Image.network('https://img.youtube.com/vi/' + video.videoId + '/0.jpg'),
-          onPressed: () => _launchURL('http://www.youtube.com/watch?v=' + video.videoId, false),
+          onPressed: () => Utility.launchURL('http://www.youtube.com/watch?v=' + video.videoId, false),
         )
     )
     ).toList();
@@ -195,7 +194,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     List<Widget> sites = gameDetails.websites.map((site) =>  Container(
         child: new IconButton(
           icon: Image.asset(intToWebsiteCategory(site.category)),
-          onPressed: () => _launchURL(site.url, true),
+          onPressed: () => Utility.launchURL(site.url, true),
         )
     )
     ).toList();
@@ -263,18 +262,6 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
         ],
       ),
     );
-  }
-
-  _launchURL(String url, bool forceSafari) async {
-    if (await canLaunch(url)) {
-      if (Platform.isIOS) {
-        await launch(url, forceSafariVC: forceSafari);
-      } else {
-        await launch(url);
-      }
-    } else {
-      throw 'Could not open $url';
-    }
   }
 
   _moveLeft() {

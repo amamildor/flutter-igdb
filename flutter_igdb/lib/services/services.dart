@@ -33,7 +33,7 @@ Future<GameDetails> getGameDetails(int gameId) async {
   return gameDetailsFromJson(response).first; //cast json to list of gameSearch
 }
 
-Future<Pulses> getPulses() async {
+Future<List<Pulses>> getPulses() async {
 
   var params = new IGDBRequestParameters(
     limit: 20,
@@ -42,7 +42,7 @@ Future<Pulses> getPulses() async {
   );
 
   final response = await makeRequest('$url/pulses', params.toBody()); //json return from api
-  return pulsesFromJson(response).first; //cast json to list of gameSearch
+  return pulsesFromJson(response); //cast json to list of gameSearch
 }
 
 Future<String> makeRequest(String url, String body) async {
