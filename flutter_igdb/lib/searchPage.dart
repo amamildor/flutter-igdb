@@ -4,6 +4,7 @@ import 'package:flutter_igdb/models/gameSearch.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter_igdb/gameDetailsPage.dart';
 import 'dart:async';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class SearchList extends StatefulWidget {
   SearchList({Key key}) : super(key:key);
@@ -65,6 +66,9 @@ class _SearchState extends State<SearchList> {
 
   @override
   Widget build(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(Color.fromRGBO(0, 0, 0, 0.0));
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+
     return Scaffold(
       key: key,
       appBar: AppBar(

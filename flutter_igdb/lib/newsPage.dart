@@ -20,9 +20,6 @@ class _NewsPageState extends State<NewsPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('News Page'),
-      ),
       body: FutureBuilder<List<Pulses>>(
         future: getPulses(),
         builder: (context, snapshot) {
@@ -76,7 +73,7 @@ class _NewsPageState extends State<NewsPage> {
               Positioned(
                 left: 0.0,
                 right: 0.0,
-                height: 80,
+                height: 70,
                 bottom: 0.0,
                 child: Container(
                   padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_igdb/searchPage.dart';
 import 'package:flutter_igdb/newsPage.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 void main() => runApp(new MyApp());
 
@@ -21,6 +22,8 @@ class MyAppState extends State<MyApp> {
   @override
 
   Widget build(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(Color.fromRGBO(0, 0, 0, 0.6));
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     return MaterialApp(
       title: 'Igdb Flutter App',
       debugShowCheckedModeBanner: false,
