@@ -5,6 +5,7 @@ import 'package:flutter_igdb/services/services.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter_igdb/utils.dart';
 import 'dart:async';
+import 'package:flutter_igdb/gameDetailsPage.dart';
 
 class NewsPage extends StatefulWidget {
   NewsPage({Key key}) : super(key: key);
@@ -66,7 +67,7 @@ class _NewsPageState extends State<NewsPage> {
         height: 100.0,
         width: 100.0,
         decoration: BoxDecoration(
-            color: Colors.purple[300],
+            //color: Colors.purple[300],
             borderRadius: BorderRadius.circular(10.0)
         ),
         child: Center(
@@ -86,6 +87,10 @@ class _NewsPageState extends State<NewsPage> {
         Container(
           height: 260.0,
           child: _buildArticles(),
+        ),
+        Container(
+          padding: EdgeInsets.only(top: 12.0, left: 8.0, right: 8.0),
+          child: Text("Available Soon", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
         ),
         FutureBuilder<List<GameSearch>>(
             future: getFutureReleases(),
@@ -160,7 +165,16 @@ class _NewsPageState extends State<NewsPage> {
       itemCount: articles.length,
       itemBuilder: (context, int){
         return InkWell(
-          onTap: () => Utility.launchURL(articles[int].website.url, true),
+          onTap: () {
+            getGameDetails(futureReleases[int].id).then((response) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GameDetailsPage(gameDetails: response),
+                ),
+              );
+            });
+          },
           child: _buildReleaseCard(futureReleases[int]),
         );
       },
