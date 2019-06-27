@@ -22,6 +22,20 @@ Future<List<GameSearch>> getGames(String search) async {
   return gameSearchFromJson(response); //cast json to list of gameSearch
 }
 
+Future<List<GameSearch>> getFutureReleases() async {
+  var date = (DateTime.now(). millisecondsSinceEpoch ~/ 1000).toInt();//(DateTime.now().millisecondsSinceEpoch / 1000).toInt()
+  var params = new IGDBRequestParameters(
+      fields: ['name', 'first_release_date', 'cover.*'], //fields to return from api call
+      order: 'first_release_date asc',
+
+      filters: 'release_dates.region = (1, 8) & first_release_date > $date & cover != null',
+      limit: 50 //nbMax of returned elements
+  );
+
+  final response = await makeRequest('$url/games', params.toBody()); //json return from api
+  return gameSearchFromJson(response); //cast json to list of gameSearch
+}
+
 Future<GameDetails> getGameDetails(int gameId) async {
 
   var params = new IGDBRequestParameters(
