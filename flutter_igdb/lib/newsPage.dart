@@ -31,16 +31,14 @@ class _NewsPageState extends State<NewsPage> {
   }
 
   Timer getTimer() {
-    return Timer.periodic(Duration(seconds: 5), (_) {
+    return Timer.periodic(Duration(seconds: 4), (_) {
       pageController.nextPage(duration: Duration(milliseconds: 800), curve: Curves.fastOutSlowIn);
     });
   }
 
   void pauseOnTouch() {
     timer.cancel();
-    timer = Timer(Duration(seconds: 4), () {
-      timer = getTimer();
-    });
+    timer = getTimer();
   }
 
   Widget build(BuildContext context) {
@@ -114,48 +112,48 @@ class _NewsPageState extends State<NewsPage> {
   }
 
   Widget _buildArticles() {
-    return GestureDetector(
-      onTapDown: (_) => pauseOnTouch(),
-      child: new PageView.builder(
-        controller: pageController,
-        itemBuilder: (context, int){
-          return InkWell(
-            onTap: () => Utility.launchURL(articles[int % articles.length].website.url, true),
-            child: Stack(
-              children: <Widget>[
-                Positioned.fill(
-                  child: Image.network(
-                    articles[int % articles.length].image,
-                    scale: 2.0,
-                    fit: BoxFit.cover,
+    return PageView.builder(
+      controller: pageController,
+      onPageChanged: (_) => pauseOnTouch(),
+      itemBuilder: (context, int){
+        return InkWell(
+          onTap: () => Utility.launchURL(articles[int % articles.length].website.url, true),
+          child: Stack(
+            children: <Widget>[
+              Positioned.fill(
+                child: Image.network(
+                  articles[int % articles.length].image,
+                  scale: 2.0,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                left: 0.0,
+                right: 0.0,
+                height: 70,
+                bottom: 0.0,
+                child: Container(
+                  padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+                  color: Color.fromRGBO(0, 0, 0, 0.70),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(articles[int % articles.length].title,
+                          style: TextStyle(color: Colors.white),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,),
+                        Text(_authorDate(articles[int % articles.length]),
+                          style: TextStyle(color: Colors.grey),
+                          textAlign: TextAlign.left,),
+                      ]
                   ),
                 ),
-                Positioned(
-                  left: 0.0,
-                  right: 0.0,
-                  height: 70,
-                  bottom: 0.0,
-                  child: Container(
-                    padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-                    color: Color.fromRGBO(0, 0, 0, 0.70),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(articles[int % articles.length].title,
-                            style: TextStyle(color: Colors.white),),
-                          Text(_authorDate(articles[int % articles.length]),
-                            style: TextStyle(color: Colors.grey),
-                            textAlign: TextAlign.left,),
-                        ]
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
