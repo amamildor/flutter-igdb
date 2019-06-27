@@ -14,10 +14,8 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
-  List<Pulses> articles;
+  List<Pulses> articles = List<Pulses>();
   List<GameSearch> futureReleases;
-  final int initialPage = 0;
-  final int realPage = 10000;
   Timer timer;
   PageController pageController = PageController();
 
@@ -46,44 +44,18 @@ class _NewsPageState extends State<NewsPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: <Widget>[
-          FutureBuilder<List<Pulses>>(
-            future: getPulses(),
-            initialData: [],
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                articles = snapshot.data;
-                return Container(
-                  height: 260.0,
-                  child: _buildArticles(),
-                );
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
+      body: FutureBuilder<List<Pulses>>(
+        future: getPulses(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            articles = snapshot.data;
+            return _buildBody();
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
 
-              _buildLoader();
-            },
-          ),
-          FutureBuilder<List<GameSearch>>(
-            future: getFutureReleases(),
-            initialData: [],
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                futureReleases = snapshot.data;
-                return Container(
-                  height: 250.0,
-                  padding: EdgeInsets.all(8.0),
-                  child: _buildFutureReleases(),
-                );
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
-
-              _buildLoader();
-            },
-          ),
-        ],
+          return _buildLoader();
+        },
       )
     );
   }
@@ -105,6 +77,34 @@ class _NewsPageState extends State<NewsPage> {
             )
         ),
       ),
+    );
+  }
+
+  Widget _buildBody() {
+    return ListView(
+      children: <Widget>[
+        Container(
+          height: 260.0,
+          child: _buildArticles(),
+        ),
+        FutureBuilder<List<GameSearch>>(
+            future: getFutureReleases(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                futureReleases = snapshot.data;
+                return Container(
+                  height: 250.0,
+                  padding: EdgeInsets.all(8.0),
+                  child: _buildFutureReleases(),
+                );
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+
+              return _buildLoader();
+            }
+        ),
+      ],
     );
   }
 
