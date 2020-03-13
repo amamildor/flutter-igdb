@@ -6,6 +6,7 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter_igdb/utils.dart';
 import 'dart:async';
 import 'package:flutter_igdb/gameDetailsPage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class NewsPage extends StatefulWidget {
   NewsPage({Key key}) : super(key: key);
@@ -121,10 +122,24 @@ class _NewsPageState extends State<NewsPage> {
           child: Stack(
             children: <Widget>[
               Positioned.fill(
-                child: Image.network(
-                  articles[int % articles.length].image,
-                  scale: 2.0,
-                  fit: BoxFit.cover,
+                child: CachedNetworkImage(
+                  imageUrl: articles[int % articles.length].image ?? '',
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                          ),
+                    ),
+                  ),
+                  placeholder: (context, url) => Center(
+                    child: SizedBox(
+                      child: CircularProgressIndicator(),
+                      height: 50.0,
+                      width: 50.0,
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),
               Positioned(
