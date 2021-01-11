@@ -33,7 +33,9 @@ class _NewsPageState extends State<NewsPage> {
 
   Timer getTimer() {
     return Timer.periodic(Duration(seconds: 4), (_) {
-      pageController.nextPage(duration: Duration(milliseconds: 800), curve: Curves.fastOutSlowIn);
+      if (pageController.hasClients) {
+        pageController.nextPage(duration: Duration(milliseconds: 800), curve: Curves.fastOutSlowIn);
+      }
     });
   }
 
